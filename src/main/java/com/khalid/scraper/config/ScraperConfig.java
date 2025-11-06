@@ -27,7 +27,7 @@ public class ScraperConfig {
      */
     public static ScraperConfig fromArgs(String[] args) {
         ScraperConfig config = new ScraperConfig();
-        
+
         for (String arg : args) {
             if (arg.startsWith("--pages=")) {
                 config.maxPages = Integer.parseInt(arg.substring(8));
@@ -58,10 +58,21 @@ public class ScraperConfig {
     }
 
     // Getters
-    public int getMaxPages() { return maxPages; }
-    public String getOutputFile() { return outputFile; }
-    public boolean isDebug() { return debug; }
-    public boolean isUseTimestamp() { return useTimestamp; }
+    public int getMaxPages() {
+        return maxPages;
+    }
+
+    public String getOutputFile() {
+        return outputFile;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public boolean isUseTimestamp() {
+        return useTimestamp;
+    }
 
     public void printConfig() {
         System.out.println("=== Scraper Configuration ===");

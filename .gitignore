@@ -1,0 +1,38 @@
+# Maven build artifacts
+target/
+*.class
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Scraper output files
+*.json
+!pom.xml
+
+# Debug files
+debug_page.html
+DebugPage.java
+
+# Log files
+*.log
+
+# Compiled Java files
+*.class
+*.jar
+*.war
+*.ear
+
+# Package Files
+*.nar
+*.zip
+*.tar.gz
+*.rar

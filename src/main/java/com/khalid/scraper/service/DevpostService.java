@@ -11,14 +11,15 @@ import java.util.*;
 
 /**
  * Service class for fetching hackathon data from Devpost API.
- * Includes retry logic with exponential backoff for rate limiting and server errors.
+ * Includes retry logic with exponential backoff for rate limiting and server
+ * errors.
  */
 public class DevpostService {
     private static final String API_BASE_URL = "https://devpost.com/api/hackathons";
     private static final String USER_AGENT = "Mozilla/5.0 (HackHub Scraper)";
     private static final int TIMEOUT_SECONDS = 15;
     private static final int DELAY_MS = 1000;
-    
+
     // Retry configuration
     private static final int MAX_RETRIES = 3;
     private static final int INITIAL_RETRY_DELAY_MS = 2000;
@@ -55,7 +56,7 @@ public class DevpostService {
 
             try {
                 System.out.print("📄 Fetching page " + currentPage + "... ");
-                
+
                 JsonObject response = fetchPageWithRetry(currentPage);
                 JsonArray hackathonsArray = response.getAsJsonArray("hackathons");
 
@@ -79,7 +80,7 @@ public class DevpostService {
                 }
 
                 currentPage++;
-                
+
                 // Rate limiting: pause between requests
                 if (currentPage <= maxPages || maxPages == 0) {
                     Thread.sleep(DELAY_MS);
@@ -136,7 +137,8 @@ public class DevpostService {
                 } else if (statusCode >= 500) {
                     // Server error
                     if (attempt < MAX_RETRIES) {
-                        System.out.println("\n⚠️  Server error (" + statusCode + "). Retrying in " + (retryDelay / 1000) + "s...");
+                        System.out.println(
+                                "\n⚠️  Server error (" + statusCode + "). Retrying in " + (retryDelay / 1000) + "s...");
                         Thread.sleep(retryDelay);
                         retryDelay = Math.min(retryDelay * 2, MAX_RETRY_DELAY_MS);
                         attempt++;
