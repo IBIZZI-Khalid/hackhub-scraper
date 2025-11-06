@@ -16,7 +16,8 @@ Thumbs.db
 
 # Scraper output files
 *.json
-!pom.xml
+!pom.json
+!sample_output.json
 
 # Debug files
 debug_page.html
