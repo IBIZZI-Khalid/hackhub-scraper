@@ -1,0 +1,5 @@
+com\khalid\scraper\DebugPage.class
+com\khalid\scraper\model\HackathonDTO.class
+com\khalid\scraper\DevpostScraper.class
+com\khalid\scraper\service\DevpostService.class
+com\khalid\scraper\config\ScraperConfig.class
