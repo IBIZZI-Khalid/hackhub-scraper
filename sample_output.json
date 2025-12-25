@@ -1,32 +1,32 @@
 [
-  {
-    "title": "Cloud Run Hackathon",
-    "url": "https://run.devpost.com/",
-    "organization": "Google",
-    "location": "Online",
-    "startDate": "2024-10-01",
-    "endDate": "2024-12-01",
-    "prizeAmount": "$50,000",
-    "registrationsCount": 2790,
-    "featured": true,
-    "openState": "open",
-    "thumbnailUrl": "//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/826/553/datas/medium_square.png",
-    "source": "devpost",
-    "scrapedAt": "2025-11-06T15:16:20.876"
-  },
-  {
-    "title": "Rift Rewind Hackathon",
-    "url": "https://riftrewind.devpost.com/",
-    "organization": "Amazon",
-    "location": "Online",
-    "startDate": "2024-09-15",
-    "endDate": "2024-11-30",
-    "prizeAmount": "$26,000",
-    "registrationsCount": 2527,
-    "featured": false,
-    "openState": "open",
-    "thumbnailUrl": "//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/715/081/datas/medium_square.png",
-    "source": "devpost",
-    "scrapedAt": "2025-11-06T15:16:20.876"
-  }
+    {
+        "title": "Cloud Run Hackathon",
+        "url": "https://run.devpost.com/",
+        "organization": "Google",
+        "location": "Online",
+        "startDate": "2024-10-01",
+        "endDate": "2024-12-01",
+        "prizeAmount": "$50,000",
+        "registrationsCount": 2790,
+        "featured": true,
+        "openState": "open",
+        "thumbnailUrl": "//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/826/553/datas/medium_square.png",
+        "source": "devpost",
+        "scrapedAt": "2025-11-06T15:16:20.876"
+    },
+    {
+        "title": "Rift Rewind Hackathon",
+        "url": "https://riftrewind.devpost.com/",
+        "organization": "Amazon",
+        "location": "Online",
+        "startDate": "2024-09-15",
+        "endDate": "2024-11-30",
+        "prizeAmount": "$26,000",
+        "registrationsCount": 2527,
+        "featured": false,
+        "openState": "open",
+        "thumbnailUrl": "//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/715/081/datas/medium_square.png",
+        "source": "devpost",
+        "scrapedAt": "2025-11-06T15:16:20.876"
+    }
 ]

@@ -18,6 +18,11 @@ public class HackathonDTO {
     private Boolean featured;
     private String openState;
     private String thumbnailUrl;
+    private String blurb;
+    private String description;
+    private String requirements;
+    private String judges;
+    private String judgingCriteria;
     private String source;
     private LocalDateTime scrapedAt;
 
@@ -112,6 +117,46 @@ public class HackathonDTO {
 
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public String getBlurb() {
+        return blurb;
+    }
+
+    public void setBlurb(String blurb) {
+        this.blurb = blurb;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getRequirements() {
+        return requirements;
+    }
+
+    public void setRequirements(String requirements) {
+        this.requirements = requirements;
+    }
+
+    public String getJudges() {
+        return judges;
+    }
+
+    public void setJudges(String judges) {
+        this.judges = judges;
+    }
+
+    public String getJudgingCriteria() {
+        return judgingCriteria;
+    }
+
+    public void setJudgingCriteria(String judgingCriteria) {
+        this.judgingCriteria = judgingCriteria;
     }
 
     public String getSource() {

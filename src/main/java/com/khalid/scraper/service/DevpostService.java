@@ -180,8 +180,146 @@ public class DevpostService {
         dto.setFeatured(getBooleanOrFalse(json, "featured"));
         dto.setOpenState(getStringOrNull(json, "open_state"));
         dto.setThumbnailUrl(getStringOrNull(json, "thumbnail_url"));
+        // Try common short blurb fields from Devpost API
+        String desc = getFirstString(json, "short_description", "description", "blurb", "summary");
+        String requirements = getFirstString(json, "requirements", "challenge_requirements", "requirements_text");
+        String judges = getFirstString(json, "judges", "judge_list");
+        String judgingCriteria = getFirstString(json, "judging_criteria", "criteria", "judging");
+
+        // If API did not provide some of these, attempt to fetch them from the
+        // hackathon page
+        Map<String, String> details = new HashMap<>();
+        if ((desc == null || desc.isBlank() || requirements == null || judges == null || judgingCriteria == null)
+                && dto.getUrl() != null && !dto.getUrl().isBlank()) {
+            try {
+                details = fetchDetailsFromPage(dto.getUrl());
+                // prefer plain/text short description for blurb, avoid using HTML
+                if ((desc == null || desc.isBlank()) && details.get("description") != null)
+                    desc = details.get("description");
+                if ((requirements == null || requirements.isBlank()) && details.get("requirements") != null)
+                    requirements = details.get("requirements");
+                if ((judges == null || judges.isBlank()) && details.get("judges") != null)
+                    judges = details.get("judges");
+                if ((judgingCriteria == null || judgingCriteria.isBlank()) && details.get("judgingCriteria") != null)
+                    judgingCriteria = details.get("judgingCriteria");
+            } catch (Exception e) {
+                log("Could not fetch page details: " + e.getMessage());
+            }
+        }
+
+        // Ensure we never leave fields null so they appear in JSON (empty string if
+        // missing)
+        dto.setBlurb(desc != null ? desc : "");
+        dto.setRequirements(requirements != null ? requirements : "");
+        dto.setJudges(judges != null ? judges : "");
+        dto.setJudgingCriteria(judgingCriteria != null ? judgingCriteria : "");
+        // set long description (prefer HTML from page), keep blurb as short text
+        String longDesc = details.getOrDefault("descriptionHtml", details.getOrDefault("description", ""));
+        dto.setDescription(longDesc);
         dto.setSource("devpost");
         return dto;
+    }
+
+    /**
+     * Fetch the hackathon page and attempt to extract a short description or meta
+     * description.
+     */
+    private String fetchDescriptionFromPage(String url) {
+        try {
+            // Use Jsoup to fetch and parse page HTML
+            org.jsoup.nodes.Document doc = org.jsoup.Jsoup.connect(url)
+                    .userAgent(USER_AGENT)
+                    .timeout(TIMEOUT_SECONDS * 1000)
+                    .get();
+
+            // 1) meta description
+            org.jsoup.nodes.Element meta = doc.selectFirst("meta[name=description], meta[property=og:description]");
+            if (meta != null) {
+                String content = meta.hasAttr("content") ? meta.attr("content") : meta.text();
+                if (content != null && !content.isBlank())
+                    return content.trim();
+            }
+
+            // 2) common page selectors for Devpost challenge blurb
+            org.jsoup.nodes.Element blurb = doc.selectFirst(
+                    ".challenge-blurb, .challenge-description, .blurb, .summary, .excerpt, .challenge-intro");
+            if (blurb != null) {
+                String text = blurb.text();
+                if (text != null && !text.isBlank())
+                    return text.trim();
+            }
+
+        } catch (Exception e) {
+            // allow caller to handle/log
+            if (debug)
+                e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Fetch multiple detail fields from the challenge page using Jsoup.
+     */
+    private Map<String, String> fetchDetailsFromPage(String url) {
+        Map<String, String> out = new HashMap<>();
+        try {
+            org.jsoup.nodes.Document doc = org.jsoup.Jsoup.connect(url)
+                    .userAgent(USER_AGENT)
+                    .timeout(TIMEOUT_SECONDS * 1000)
+                    .get();
+
+            // description (meta or article element)
+            org.jsoup.nodes.Element meta = doc.selectFirst("meta[name=description], meta[property=og:description]");
+            if (meta != null) {
+                String content = meta.hasAttr("content") ? meta.attr("content") : meta.text();
+                if (content != null && !content.isBlank())
+                    out.put("description", content.trim());
+            }
+
+            org.jsoup.nodes.Element descEl = doc.selectFirst(
+                    "main #challenge-description, main .challenge-blurb, main #challenge-description, #challenge-description, .challenge-description");
+            if (descEl != null) {
+                String text = descEl.text();
+                String html = descEl.html();
+                if (text != null && !text.isBlank()) {
+                    out.putIfAbsent("description", text.trim());
+                }
+                if (html != null && !html.isBlank()) {
+                    out.putIfAbsent("descriptionHtml", html.trim());
+                }
+            }
+
+            org.jsoup.nodes.Element req = doc.selectFirst(
+                    "main #challenge-requirements, #challenge-requirements, .challenge-requirements, .requirements");
+            if (req != null && !req.text().isBlank())
+                out.put("requirements", req.text().trim());
+
+            org.jsoup.nodes.Element judgesEl = doc.selectFirst("main #judges, #judges, .judges, .judge-list");
+            if (judgesEl != null && !judgesEl.text().isBlank())
+                out.put("judges", judgesEl.text().trim());
+
+            org.jsoup.nodes.Element crit = doc
+                    .selectFirst("main #judging-criteria, #judging-criteria, .judging-criteria, .criteria");
+            if (crit != null && !crit.text().isBlank())
+                out.put("judgingCriteria", crit.text().trim());
+
+        } catch (Exception e) {
+            if (debug)
+                e.printStackTrace();
+        }
+        return out;
+    }
+
+    /**
+     * Return the first non-null string value for the provided keys.
+     */
+    private String getFirstString(JsonObject json, String... keys) {
+        for (String k : keys) {
+            String v = getStringOrNull(json, k);
+            if (v != null && !v.isEmpty())
+                return v;
+        }
+        return null;
     }
 
     // JSON helper methods
