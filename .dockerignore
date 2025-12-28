@@ -1,0 +1,10 @@
+target/
+.git/
+.gitignore
+.vscode/
+*.md
+*.log
+.DS_Store
+*.pdf
+*.json
+!pom.xml
